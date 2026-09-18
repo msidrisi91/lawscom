@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://jurisshorts-backend.onrender.com/api/v1";
 const ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY || "juris_admin_secret_key_2026";
 
 const headers = {

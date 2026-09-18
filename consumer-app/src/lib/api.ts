@@ -1,6 +1,6 @@
 import { SummaryCard, StatuteSection, DailyLaw } from "./types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://jurisshorts-backend.onrender.com/api/v1";
 
 export async function fetchFeed(court?: string, category?: string): Promise<SummaryCard[]> {
   try {
