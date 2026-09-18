@@ -1,6 +1,12 @@
 # JurisShorts ("Inshorts for Legal Intelligence")
 
+[![GitHub Repo](https://img.shields.io/badge/GitHub-msidrisi91%2Flawscom-blue?logo=github)](https://github.com/msidrisi91/lawscom)
+[![License](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/PWA-iOS%20%7C%20Android%20%7C%20Web-gold)](https://github.com/msidrisi91/lawscom)
+
 A modular, multi-jurisdiction micro-reader for breaking judicial rulings, bare acts, and everyday legal awareness. Built with a completely decoupled architecture, push-notification delivery engine, and strict editorial guardrails.
+
+**Repository URL**: [https://github.com/msidrisi91/lawscom](https://github.com/msidrisi91/lawscom)
 
 ---
 
