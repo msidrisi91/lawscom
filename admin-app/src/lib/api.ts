@@ -83,7 +83,10 @@ export async function broadcastPush(
       is_breaking: isBreaking
     })
   });
-  if (!res.ok) throw new Error("Failed to broadcast push notification");
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Server returned ${res.status}: ${errorText || res.statusText}`);
+  }
   return await res.json();
 }
 

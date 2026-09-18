@@ -29,10 +29,10 @@ app = FastAPI(
     description="Backend API for JurisShorts: 60-word micro-reader for lawyers and citizens."
 )
 
-# CORS Middleware with strict origin whitelisting
+# CORS Middleware with universal origin support for Vercel, Localhost, and custom domains
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origin_regex=r".*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
