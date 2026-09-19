@@ -57,6 +57,20 @@ export default function ComposePage() {
         is_breaking: isBreaking,
         broadcast_push: broadcastPush
       });
+
+      // Dispatch instant cross-tab sync so consumer tabs update immediately
+      if (typeof window !== "undefined") {
+        if ("BroadcastChannel" in window) {
+          const bc = new BroadcastChannel("juris_broadcast");
+          bc.postMessage({
+            type: "NEW_CARD_PUBLISHED",
+            payload: { headline, is_breaking: isBreaking }
+          });
+          bc.close();
+        }
+        localStorage.setItem("juris_cross_tab_new_card", JSON.stringify({ headline, ts: Date.now() }));
+      }
+
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);

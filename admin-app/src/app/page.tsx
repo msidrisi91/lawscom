@@ -28,6 +28,16 @@ export default function AdminTriagePage() {
     setActingId(cardId);
     try {
       await processTriageAction(cardId, action, { broadcast_push: broadcastPush });
+      
+      if (action === "APPROVE" && typeof window !== "undefined") {
+        if ("BroadcastChannel" in window) {
+          const bc = new BroadcastChannel("juris_broadcast");
+          bc.postMessage({ type: "NEW_CARD_PUBLISHED", payload: { cardId } });
+          bc.close();
+        }
+        localStorage.setItem("juris_cross_tab_new_card", JSON.stringify({ cardId, ts: Date.now() }));
+      }
+
       // Remove from list or refresh
       setItems((prev) => prev.filter((item) => item.id !== cardId));
     } catch (err) {

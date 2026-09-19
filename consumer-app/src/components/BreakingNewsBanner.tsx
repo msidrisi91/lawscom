@@ -122,11 +122,17 @@ export default function BreakingNewsBanner() {
   };
 
   const handleView = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("juris_refresh_feed", { detail: alertItem }));
+    }
+
     if (alertItem?.card_id) {
-      const el = document.getElementById(`card-${alertItem.card_id}`);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-      }
+      setTimeout(() => {
+        const el = document.getElementById(`card-${alertItem.card_id}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 400);
     }
     handleDismiss();
   };

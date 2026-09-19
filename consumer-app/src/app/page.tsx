@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { fetchFeed } from "@/lib/api";
 import { SummaryCard, UserMode } from "@/lib/types";
 import LegalCard from "@/components/LegalCard";
@@ -9,7 +9,7 @@ import AudioByteModal from "@/components/AudioByteModal";
 import PersonaOnboardingModal from "@/components/PersonaOnboardingModal";
 import ThemeToggle from "@/components/ThemeToggle";
 import Logo from "@/components/Logo";
-import { RefreshCw, ChevronDown, CheckCheck, History, RotateCcw, ShieldCheck, Sparkles } from "lucide-react";
+import { RefreshCw, ChevronDown, CheckCheck, History, RotateCcw, ShieldCheck, Sparkles, BellRing } from "lucide-react";
 
 export default function HomeFeed() {
   const [cards, setCards] = useState<SummaryCard[]>([]);
@@ -19,7 +19,11 @@ export default function HomeFeed() {
   const [readCardIds, setReadCardIds] = useState<string[]>([]);
   const [firstUnreadIndex, setFirstUnreadIndex] = useState(0);
   const [reviewMode, setReviewMode] = useState(false);
+  const [showCaughtUpLanding, setShowCaughtUpLanding] = useState(false);
   const [isPositioned, setIsPositioned] = useState(false);
+  const [checkingUpdates, setCheckingUpdates] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState<string | null>(null);
+  const [newCardToast, setNewCardToast] = useState<string | null>(null);
   
   // Drawer & Audio States
   const [activeStatute, setActiveStatute] = useState<{ act: string; section: string } | null>(null);
@@ -28,6 +32,10 @@ export default function HomeFeed() {
   
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const readCardIdsRef = useRef<string[]>([]);
+  readCardIdsRef.current = readCardIds;
+  const cardsRef = useRef<SummaryCard[]>([]);
+  cardsRef.current = cards;
 
   // Prevent browser native scroll restoration on refresh so we can precisely control unread positioning
   useEffect(() => {
@@ -55,20 +63,32 @@ export default function HomeFeed() {
       const readRaw = localStorage.getItem("juris_read_cards");
       if (readRaw) storedReadIds = JSON.parse(readRaw);
       setReadCardIds(storedReadIds);
+      readCardIdsRef.current = storedReadIds;
     } catch {}
 
-    loadCards(storedReadIds);
+    loadCards(storedReadIds, false);
   }, []);
 
-  const loadCards = async (currentReadIds: string[] = readCardIds) => {
-    setLoading(true);
-    setIsPositioned(false);
+  const loadCards = async (currentReadIds?: string[], silent: boolean = false) => {
+    if (!silent) {
+      setLoading(true);
+      setIsPositioned(false);
+    }
+
+    // Fetch the latest read IDs from localStorage in case updated
+    let liveReadIds = currentReadIds ?? readCardIdsRef.current;
+    try {
+      const stored = localStorage.getItem("juris_read_cards");
+      if (stored) liveReadIds = JSON.parse(stored);
+    } catch {}
+    setReadCardIds(liveReadIds);
+    readCardIdsRef.current = liveReadIds;
+
     const data = await fetchFeed();
 
     // Partition cards into [read cards above, unread cards below]
-    // The user opens directly onto the first unread card; scrolling UP reveals read cards!
-    const unread = data.filter((c) => !currentReadIds.includes(c.id));
-    const read = data.filter((c) => currentReadIds.includes(c.id));
+    const unread = data.filter((c) => !liveReadIds.includes(c.id));
+    const read = data.filter((c) => liveReadIds.includes(c.id));
 
     let finalOrdered: SummaryCard[];
     let initialIndex = 0;
@@ -81,16 +101,89 @@ export default function HomeFeed() {
       initialIndex = 0;
     }
 
+    // Caught up screen logic:
+    if (unread.length === 0 && data.length > 0) {
+      // Only set caught up landing on initial page load / explicit refresh
+      if (!silent) {
+        setShowCaughtUpLanding(true);
+      }
+    } else if (unread.length > 0) {
+      // New unread card exists! Immediately exit caught up landing and present feed!
+      setShowCaughtUpLanding(false);
+      setReviewMode(false);
+      if (silent) {
+        setNewCardToast(unread[0].headline);
+        setTimeout(() => setNewCardToast(null), 5000);
+      }
+    }
+
     setCards(finalOrdered);
+    cardsRef.current = finalOrdered;
     setFirstUnreadIndex(initialIndex);
-    setLoading(false);
+
+    if (!silent) {
+      setLoading(false);
+    }
   };
+
+  // Real-Time Cross-Tab Synchronization & Auto-Polling for Newly Published Articles
+  useEffect(() => {
+    // 1. BroadcastChannel instant sync (for articles published from Admin in another tab)
+    let bc: BroadcastChannel | null = null;
+    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+      bc = new BroadcastChannel("juris_broadcast");
+      bc.onmessage = (event) => {
+        if (event.data?.type === "NEW_CARD_PUBLISHED" || event.data?.type === "NEW_BROADCAST") {
+          console.log("⚡ Instant new article notification received. Refreshing docket...");
+          loadCards(readCardIdsRef.current, true);
+        }
+      };
+    }
+
+    // 2. Storage event fallback across origins or tabs
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "juris_cross_tab_new_card" || e.key === "juris_cross_tab_push") {
+        loadCards(readCardIdsRef.current, true);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    // 3. Custom event from BreakingNewsBanner "Read Ruling" click
+    const handleCustomRefresh = () => {
+      loadCards(readCardIdsRef.current, false);
+    };
+    window.addEventListener("juris_refresh_feed", handleCustomRefresh);
+
+    // 4. Smart polling for newly published cards (every 3 seconds for instant response)
+    const pollInterval = setInterval(() => {
+      loadCards(readCardIdsRef.current, true);
+    }, 3000);
+
+    // 5. Window focus & visibility listener
+    const handleFocus = () => {
+      loadCards(readCardIdsRef.current, true);
+    };
+    window.addEventListener("focus", handleFocus);
+    const handleVisibility = () => {
+      if (!document.hidden) loadCards(readCardIdsRef.current, true);
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      if (bc) bc.close();
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("juris_refresh_feed", handleCustomRefresh);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      clearInterval(pollInterval);
+    };
+  }, []);
 
   // Position scroll at the first unread card before browser paint
   const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
   useIsomorphicLayoutEffect(() => {
-    if (loading || cards.length === 0) return;
+    if (loading || cards.length === 0 || showCaughtUpLanding) return;
 
     if (firstUnreadIndex > 0 && containerRef.current) {
       const height = containerRef.current.clientHeight || window.innerHeight;
@@ -107,11 +200,11 @@ export default function HomeFeed() {
     });
 
     return () => cancelAnimationFrame(timer);
-  }, [loading, firstUnreadIndex, cards]);
+  }, [loading, firstUnreadIndex, cards, showCaughtUpLanding]);
 
   // Track active card on scroll to reliably mark as read
   const handleContainerScroll = () => {
-    if (!containerRef.current || cards.length === 0) return;
+    if (!containerRef.current || cards.length === 0 || !isPositioned) return;
     const height = containerRef.current.clientHeight || window.innerHeight;
     const scrollPos = containerRef.current.scrollTop;
     const activeIdx = Math.round(scrollPos / height);
@@ -122,7 +215,7 @@ export default function HomeFeed() {
 
   // Secondary IntersectionObserver to record cards as read when viewed
   useEffect(() => {
-    if (!containerRef.current || cards.length === 0) return;
+    if (!containerRef.current || cards.length === 0 || showCaughtUpLanding) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -147,12 +240,13 @@ export default function HomeFeed() {
     });
 
     return () => observer.disconnect();
-  }, [cards]);
+  }, [cards, showCaughtUpLanding]);
 
   const markAsRead = (cardId: string) => {
     setReadCardIds((prev) => {
       if (prev.includes(cardId)) return prev;
       const updated = [...prev, cardId];
+      readCardIdsRef.current = updated;
       try {
         localStorage.setItem("juris_read_cards", JSON.stringify(updated));
       } catch {}
@@ -163,8 +257,44 @@ export default function HomeFeed() {
   const handleResetHistory = () => {
     localStorage.removeItem("juris_read_cards");
     setReadCardIds([]);
+    readCardIdsRef.current = [];
     setReviewMode(false);
-    loadCards([]);
+    setShowCaughtUpLanding(false);
+    loadCards([], false);
+  };
+
+  const handleManualCheckUpdates = async () => {
+    setCheckingUpdates(true);
+    setUpdateStatus(null);
+    try {
+      const data = await fetchFeed();
+      let liveReadIds = readCardIdsRef.current;
+      try {
+        const stored = localStorage.getItem("juris_read_cards");
+        if (stored) liveReadIds = JSON.parse(stored);
+      } catch {}
+
+      const unread = data.filter((c) => !liveReadIds.includes(c.id));
+      if (unread.length > 0) {
+        const read = data.filter((c) => liveReadIds.includes(c.id));
+        setCards([...read, ...unread]);
+        cardsRef.current = [...read, ...unread];
+        setFirstUnreadIndex(read.length);
+        setShowCaughtUpLanding(false);
+        setReviewMode(false);
+        setNewCardToast(unread[0].headline);
+        setTimeout(() => setNewCardToast(null), 5000);
+        setCheckingUpdates(false);
+        return;
+      }
+
+      setUpdateStatus("Checked just now: You have the freshest legal docket!");
+    } catch {
+      setUpdateStatus("Could not reach legal server. Please retry.");
+    } finally {
+      setCheckingUpdates(false);
+      setTimeout(() => setUpdateStatus(null), 4000);
+    }
   };
 
   const handleModeChange = (newMode: UserMode) => {
@@ -214,11 +344,11 @@ export default function HomeFeed() {
     );
   }
 
-  // All Caught Up condition: user has read all available cards
-  const allCaughtUp = cards.length > 0 && cards.every((c) => readCardIds.includes(c.id));
+  // Show All Caught Up Landing if user already read all cards and is not actively in review mode
+  const shouldShowCaughtUp = showCaughtUpLanding && !reviewMode;
 
   // If user refreshed or opened app after reading all cards, show the All Caught Up screen directly!
-  if (allCaughtUp && !reviewMode) {
+  if (shouldShowCaughtUp) {
     return (
       <div className="relative w-full h-[100dvh] bg-slate-50 dark:bg-judicial-950 overflow-hidden transition-colors flex flex-col justify-between">
         
@@ -244,12 +374,13 @@ export default function HomeFeed() {
             <ThemeToggle />
 
             <button
-              onClick={() => loadCards()}
+              onClick={() => handleManualCheckUpdates()}
+              disabled={checkingUpdates}
               className="p-2 bg-white/95 dark:bg-judicial-900/95 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-full backdrop-blur-md hover:text-blue-600 dark:hover:text-blue-400 active:scale-90 transition-all shadow-md"
               aria-label="Refresh briefs"
-              title="Refresh feed"
+              title="Check for new rulings"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className={`w-4 h-4 ${checkingUpdates ? "animate-spin text-blue-500" : ""}`} />
             </button>
           </div>
         </header>
@@ -278,6 +409,12 @@ export default function HomeFeed() {
             You've completed reading all {readCardIds.length} rulings in today's legal docket. There are no pending unread judgments.
           </p>
 
+          {updateStatus && (
+            <div className="mt-3 px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-[11px] text-blue-600 dark:text-blue-300 animate-fadeIn font-medium">
+              {updateStatus}
+            </div>
+          )}
+
           {/* Action CTAs */}
           <div className="w-full space-y-2.5 mt-6">
             <button
@@ -297,11 +434,12 @@ export default function HomeFeed() {
             </button>
 
             <button
-              onClick={() => loadCards()}
+              onClick={() => handleManualCheckUpdates()}
+              disabled={checkingUpdates}
               className="w-full text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center justify-center gap-1.5 pt-2 font-medium transition-colors"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Check for breaking judgments</span>
+              <RefreshCw className={`w-3.5 h-3.5 ${checkingUpdates ? "animate-spin" : ""}`} />
+              <span>{checkingUpdates ? "Checking judicial docket..." : "Check for breaking judgments"}</span>
             </button>
           </div>
         </div>
@@ -321,6 +459,16 @@ export default function HomeFeed() {
   return (
     <div className="relative w-full h-[100dvh] bg-slate-50 dark:bg-judicial-950 overflow-hidden transition-colors">
       
+      {/* Newly Published Article Floating Toast */}
+      {newCardToast && (
+        <div className="fixed top-14 inset-x-3 max-w-sm mx-auto z-40 animate-slideDown pointer-events-none">
+          <div className="bg-blue-600 text-white px-3.5 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-semibold">
+            <BellRing className="w-4 h-4 text-white animate-bounce" />
+            <span className="truncate">New Precedent Published: {newCardToast}</span>
+          </div>
+        </div>
+      )}
+
       {/* Top Header Bar */}
       <header className="fixed top-2.5 inset-x-0 max-w-md mx-auto z-30 px-4 flex items-center justify-between pointer-events-none">
         {/* Modern Vector Logo */}
@@ -346,7 +494,7 @@ export default function HomeFeed() {
           <ThemeToggle />
 
           <button
-            onClick={() => loadCards()}
+            onClick={() => loadCards(readCardIds, false)}
             className="p-2 bg-white/95 dark:bg-judicial-900/95 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-full backdrop-blur-md hover:text-blue-600 dark:hover:text-blue-400 active:scale-90 transition-all shadow-md"
             aria-label="Refresh briefs"
             title="Refresh feed"

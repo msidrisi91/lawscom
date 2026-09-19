@@ -7,6 +7,7 @@ export async function fetchFeed(court?: string, category?: string): Promise<Summ
     const params = new URLSearchParams();
     if (court) params.append("court", court);
     if (category) params.append("category", category);
+    params.append("_t", Date.now().toString());
     
     const res = await fetch(`${API_BASE}/feed?${params.toString()}`, { cache: "no-store" });
     if (!res.ok) throw new Error("Failed to fetch feed");

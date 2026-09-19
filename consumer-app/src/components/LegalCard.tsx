@@ -47,7 +47,7 @@ export default function LegalCard({
   };
 
   return (
-    <div className="relative w-full h-[100dvh] max-w-md mx-auto flex flex-col justify-between bg-white dark:bg-judicial-950 border-x border-slate-200 dark:border-slate-800/80 px-5 pt-14 pb-24 select-none transition-colors duration-200">
+    <div id={`card-${card.id}`} className="relative w-full h-[100dvh] max-w-md mx-auto flex flex-col justify-between bg-white dark:bg-judicial-950 border-x border-slate-200 dark:border-slate-800/80 px-5 pt-14 pb-24 select-none transition-colors duration-200">
       
       {/* Top Header Row */}
       <div>
