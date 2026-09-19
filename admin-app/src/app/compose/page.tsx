@@ -81,7 +81,7 @@ export default function ComposePage() {
       {/* Title */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <PenTool className="w-5 h-5 text-gold-400" />
+          <PenTool className="w-5 h-5 text-blue-400" />
           <h1 className="text-xl font-bold text-slate-100">
             Manual Card Composer & AI Co-Pilot
           </h1>
@@ -99,17 +99,17 @@ export default function ComposePage() {
       )}
 
       {/* AI Co-Pilot Input Box */}
-      <div className="bg-admin-900 border border-gold-500/30 rounded-2xl p-5 space-y-3">
+      <div className="bg-admin-900 border border-blue-500/30 rounded-2xl p-5 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-gold-400" />
+            <Sparkles className="w-4 h-4 text-blue-400" />
             <h3 className="text-sm font-bold text-slate-200">AI Co-Pilot Ingestion Assistant</h3>
           </div>
           <button
             type="button"
             onClick={handleAIAssist}
             disabled={assisting || !rawText}
-            className="flex items-center gap-1.5 bg-gold-500 hover:bg-gold-400 disabled:opacity-50 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-md shadow-gold-500/20"
+            className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-md shadow-blue-500/20"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>{assisting ? "AI Synthesizing..." : "✨ Auto-Generate Micro Summaries"}</span>
@@ -121,7 +121,7 @@ export default function ComposePage() {
           value={rawText}
           onChange={(e) => setRawText(e.target.value)}
           placeholder="Paste raw judgment paragraphs, causelist outcome, or reporter notes here..."
-          className="w-full bg-admin-950 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-200 leading-relaxed focus:outline-none focus:border-gold-500 resize-none font-mono"
+          className="w-full bg-admin-950 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-200 leading-relaxed focus:outline-none focus:border-blue-500 resize-none font-mono"
         />
       </div>
 
@@ -183,7 +183,7 @@ export default function ComposePage() {
             value={headline}
             onChange={(e) => setHeadline(e.target.value)}
             placeholder="Headline of the ruling..."
-            className="w-full bg-admin-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm font-serif font-bold text-slate-100 focus:outline-none focus:border-gold-500"
+            className="w-full bg-admin-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm font-serif font-bold text-slate-100 focus:outline-none focus:border-blue-500"
             required
           />
         </div>
@@ -192,7 +192,7 @@ export default function ComposePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">
             <div className="flex justify-between text-xs">
-              <span className="font-bold text-gold-400">⚖️ Advocate Summary (Ratio)</span>
+              <span className="font-bold text-blue-400">⚖️ Advocate Summary (Ratio)</span>
               <span className={`font-mono text-[11px] ${advWords <= 65 ? "text-slate-400" : "text-red-400 font-bold"}`}>
                 {advWords} / 65 words
               </span>
@@ -201,7 +201,7 @@ export default function ComposePage() {
               rows={5}
               value={advocateSummary}
               onChange={(e) => setAdvocateSummary(e.target.value)}
-              className="w-full bg-admin-950 border border-slate-700/80 rounded-xl p-3 text-xs leading-relaxed text-slate-200 focus:outline-none focus:border-gold-500 resize-none font-sans"
+              className="w-full bg-admin-950 border border-slate-700/80 rounded-xl p-3 text-xs leading-relaxed text-slate-200 focus:outline-none focus:border-blue-500 resize-none font-sans"
               required
             />
           </div>
@@ -231,7 +231,7 @@ export default function ComposePage() {
                 type="checkbox"
                 checked={isBreaking}
                 onChange={(e) => setIsBreaking(e.target.checked)}
-                className="w-4 h-4 rounded text-gold-500"
+                className="w-4 h-4 rounded text-blue-600"
               />
               <span className="text-slate-300 font-medium">Mark as Breaking</span>
             </label>
@@ -241,9 +241,9 @@ export default function ComposePage() {
                 type="checkbox"
                 checked={broadcastPush}
                 onChange={(e) => setBroadcastPush(e.target.checked)}
-                className="w-4 h-4 rounded text-gold-500"
+                className="w-4 h-4 rounded text-blue-600"
               />
-              <span className="text-gold-400 font-bold flex items-center gap-1">
+              <span className="text-blue-400 font-bold flex items-center gap-1">
                 <Bell className="w-3.5 h-3.5" />
                 <span>Broadcast Push Alert 🚨</span>
               </span>
@@ -253,7 +253,7 @@ export default function ComposePage() {
           <button
             type="submit"
             disabled={publishing}
-            className="flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-slate-950 px-6 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-gold-500/20"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-blue-500/20"
           >
             <Send className="w-4 h-4" />
             <span>{publishing ? "Publishing..." : "Publish to Live Feed"}</span>

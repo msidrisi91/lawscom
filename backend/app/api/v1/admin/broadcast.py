@@ -23,6 +23,7 @@ def broadcast_push_notification(payload: PushBroadcastRequest, db: Session = Dep
     return result
 
 @router.get("/history")
-def get_broadcast_history():
-    """Returns past push dispatch audit logs."""
-    return notification_service.get_history()
+def get_broadcast_history(limit: int = 50, offset: int = 0, db: Session = Depends(get_db)):
+    """Returns past push dispatch audit logs with database pagination."""
+    return notification_service.get_history(db=db, limit=limit, offset=offset)
+

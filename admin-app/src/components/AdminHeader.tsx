@@ -3,11 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CheckSquare, Bell, Cpu, PenTool, ExternalLink } from "lucide-react";
+import { CheckSquare, Bell, Cpu, PenTool, ExternalLink, LogOut } from "lucide-react";
 import Logo from "@/components/Logo";
+import { useAdminAuth } from "@/components/AdminAuthGuard";
 
 export default function AdminHeader() {
   const pathname = usePathname();
+  const { logout } = useAdminAuth();
 
   const navLinks = [
     { label: "HITL Triage Desk", href: "/", icon: CheckSquare },
@@ -38,7 +40,7 @@ export default function AdminHeader() {
               href={link.href}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 isActive
-                  ? "bg-gold-500 text-slate-950 font-bold shadow-sm"
+                  ? "bg-blue-600 text-white font-bold shadow-sm"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-850"
               }`}
             >
@@ -49,17 +51,26 @@ export default function AdminHeader() {
         })}
       </nav>
 
-      {/* Quick External Link to Consumer App */}
-      <div className="flex items-center gap-3">
+      {/* Quick External Link & Log Out */}
+      <div className="flex items-center gap-4">
         <a
-          href="http://localhost:3000"
+          href="https://lawscom.vercel.app/"
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-1 text-xs text-slate-400 hover:text-gold-400 transition-colors"
+          className="flex items-center gap-1 text-xs text-slate-400 hover:text-blue-400 transition-colors"
         >
           <span>Open Consumer App</span>
           <ExternalLink className="w-3.5 h-3.5" />
         </a>
+
+        <button
+          onClick={logout}
+          className="flex items-center gap-1 text-xs text-slate-400 hover:text-red-400 bg-slate-800/80 hover:bg-slate-800 px-2.5 py-1.5 rounded-lg transition-colors border border-slate-700/60"
+          title="Sign out of admin session"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          <span>Sign Out</span>
+        </button>
       </div>
     </header>
   );

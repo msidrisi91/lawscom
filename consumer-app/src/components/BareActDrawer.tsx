@@ -45,13 +45,13 @@ export default function BareActDrawer({ act, section, onClose }: BareActDrawerPr
         <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-600 rounded-full mx-auto mb-4 shrink-0" />
 
         {/* Drawer Header */}
-        <div className="flex items-start justify-between gap-3 border-b border-slate-200 dark:border-slate-750 pb-3 mb-4">
+        <div className="flex items-start justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3 mb-4">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-gold-500/10 border border-gold-500/30 rounded-xl text-gold-600 dark:text-gold-400">
+            <div className="p-2 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 rounded-xl text-blue-600 dark:text-blue-400">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[11px] font-mono text-gold-600 dark:text-gold-400 font-bold tracking-wider uppercase">
+              <span className="text-[11px] font-mono text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase">
                 {act} Section {section}
               </span>
               <h2 className="text-base font-serif font-bold text-slate-900 dark:text-slate-100">
@@ -73,7 +73,7 @@ export default function BareActDrawer({ act, section, onClose }: BareActDrawerPr
         <div className="overflow-y-auto no-scrollbar space-y-4 text-sm pr-1">
           {loading ? (
             <div className="py-12 text-center text-slate-500 dark:text-slate-400">
-              <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-gold-500 border-t-transparent mb-2" />
+              <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-blue-600 border-t-transparent mb-2" />
               <p>Fetching official statutory text...</p>
             </div>
           ) : data ? (
@@ -82,12 +82,12 @@ export default function BareActDrawer({ act, section, onClose }: BareActDrawerPr
               <div className="bg-slate-50 dark:bg-judicial-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase flex items-center gap-1">
-                    <Shield className="w-3.5 h-3.5 text-gold-500" />
+                    <Shield className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                     Official Statutory Bare Act Text
                   </span>
                   <button
                     onClick={handleCopy}
-                    className="flex items-center gap-1 text-xs text-gold-600 dark:text-gold-400 hover:underline font-medium"
+                    className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
                   >
                     {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copied ? "Copied" : "Copy Text"}</span>
@@ -117,7 +117,7 @@ export default function BareActDrawer({ act, section, onClose }: BareActDrawerPr
         <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
           <button
             onClick={onClose}
-            className="w-full bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white font-medium py-3 rounded-2xl transition-colors active:scale-98 text-xs font-bold uppercase tracking-wider"
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-2xl transition-colors active:scale-98 text-xs font-bold uppercase tracking-wider shadow-sm"
           >
             Dismiss
           </button>

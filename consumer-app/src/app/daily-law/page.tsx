@@ -37,13 +37,13 @@ export default function DailyLawPage() {
       {/* Header */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1.5 text-gold-700 dark:text-gold-400 bg-amber-50 dark:bg-gold-500/10 border border-gold-300/60 dark:border-gold-500/30 px-3 py-1 rounded-full text-xs font-bold">
+          <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 px-3 py-1 rounded-full text-xs font-bold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Daily Legal Awareness</span>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 px-2.5 py-1 rounded-full text-xs font-bold">
+            <div className="flex items-center gap-1 text-cyan-700 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800/40 px-2.5 py-1 rounded-full text-xs font-bold">
               <Flame className="w-3.5 h-3.5 fill-current" />
               <span>5 Day Streak</span>
             </div>
@@ -61,7 +61,7 @@ export default function DailyLawPage() {
 
         {/* Knowledge Flashcard */}
         <div className="bg-slate-50 dark:bg-judicial-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-xl mb-5 space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono text-gold-600 dark:text-gold-400 uppercase tracking-wider font-bold">
+          <div className="flex items-center gap-2 text-xs font-mono text-blue-600 dark:text-blue-400 uppercase tracking-wider font-bold">
             <BookOpen className="w-4 h-4" />
             <span>{law.statute_reference || "Statutory Ground Truth"}</span>
           </div>
@@ -84,7 +84,7 @@ export default function DailyLawPage() {
         {law.quiz_question && (
           <div className="bg-slate-50 dark:bg-judicial-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 mb-4">
             <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wide">
-              <Award className="w-4 h-4 text-gold-500" />
+              <Award className="w-4 h-4 text-blue-500" />
               <span>Test Your Legal Awareness:</span>
             </div>
 

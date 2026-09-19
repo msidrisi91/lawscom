@@ -142,3 +142,17 @@ class EngineConfig(Base):
     confidence_threshold = Column(Float, default=0.95)
     last_scraper_run = Column(DateTime, default=datetime.utcnow)
     scraper_status = Column(JSON, default=dict)
+
+class BroadcastLog(Base):
+    __tablename__ = "broadcast_logs"
+    
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    title = Column(String(300), nullable=False)
+    body = Column(Text, nullable=False)
+    recipient_count = Column(Integer, default=0)
+    target_role = Column(String(50), default="all", index=True)
+    is_breaking = Column(Boolean, default=True)
+    card_id = Column(String(36), ForeignKey("summary_cards.id"), nullable=True)
+    status = Column(String(50), default="SENT")
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+

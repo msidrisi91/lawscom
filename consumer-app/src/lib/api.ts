@@ -72,6 +72,19 @@ export async function subscribePush(subscription: any, role: string = "all"): Pr
   }
 }
 
+export async function getLatestPush(): Promise<any> {
+  try {
+    const res = await fetch(`${API_BASE}/push/latest`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.latest;
+  } catch {
+    return null;
+  }
+}
+
+
+
 function getFallbackCards(): SummaryCard[] {
   return [
     {

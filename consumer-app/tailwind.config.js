@@ -18,20 +18,26 @@ module.exports = {
           border: "var(--border-color)",
         },
         judicial: {
-          950: "#060911",
-          900: "#0B1120",
-          800: "#131C31",
+          950: "#030712",
+          900: "#0B1220",
+          800: "#0F172A",
           700: "#1E293B",
           600: "#334155",
           100: "#F1F5F9",
           50: "#F8FAFC",
         },
-        gold: {
-          300: "#FDE68A",
-          400: "#FBBF24",
-          500: "#D97706",
-          600: "#B45309",
+        cobalt: {
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
         },
+        azure: {
+          400: "#38BDF8",
+          500: "#0EA5E9",
+          600: "#0284C7",
+        },
+
       },
       fontFamily: {
         serif: ["var(--font-serif)", "Newsreader", "Georgia", "Cambria", "serif"],

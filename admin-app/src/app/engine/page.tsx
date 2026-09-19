@@ -47,7 +47,7 @@ export default function EngineControlsPage() {
       {/* Title */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <Cpu className="w-5 h-5 text-gold-400" />
+          <Cpu className="w-5 h-5 text-blue-400" />
           <h1 className="text-xl font-bold text-slate-100">
             Publishing Engine & Scraper Controls
           </h1>
@@ -68,13 +68,13 @@ export default function EngineControlsPage() {
       <div className="bg-admin-900 border border-slate-800 rounded-2xl p-6 space-y-6">
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
-            <Sliders className="w-4 h-4 text-gold-400" />
+            <Sliders className="w-4 h-4 text-blue-400" />
             <h3 className="text-sm font-bold text-slate-200">Autonomous Ingestion Rules</h3>
           </div>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="bg-gold-500 hover:bg-gold-400 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs active:scale-95 transition-all"
+            className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs active:scale-95 transition-all shadow-sm"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>
@@ -113,7 +113,7 @@ export default function EngineControlsPage() {
                 Minimum legal accuracy confidence required for automated publishing.
               </span>
             </div>
-            <span className="font-mono text-base font-bold text-gold-400 bg-slate-900 border border-slate-700 px-3 py-1 rounded-lg">
+            <span className="font-mono text-base font-bold text-blue-400 bg-slate-900 border border-slate-700 px-3 py-1 rounded-lg">
               {Math.round(threshold * 100)}%
             </span>
           </div>
@@ -125,7 +125,7 @@ export default function EngineControlsPage() {
             step="0.01"
             value={threshold}
             onChange={(e) => setThreshold(parseFloat(e.target.value))}
-            className="w-full accent-gold-500 bg-slate-800 h-2 rounded-lg cursor-pointer"
+            className="w-full accent-blue-600 bg-slate-800 h-2 rounded-lg cursor-pointer"
           />
 
           <div className="flex justify-between text-[10px] text-slate-500 font-mono">

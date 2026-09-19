@@ -53,7 +53,7 @@ export default function AdminTriagePage() {
             <h1 className="text-xl font-bold text-slate-100">
               Human-in-the-Loop (HITL) Triage Desk
             </h1>
-            <span className="bg-gold-500/20 text-gold-400 border border-gold-500/30 text-xs font-mono font-bold px-2.5 py-0.5 rounded-full">
+            <span className="bg-blue-950/80 text-blue-400 border border-blue-500/40 text-xs font-mono font-bold px-2.5 py-0.5 rounded-full">
               {items.length} Pending
             </span>
           </div>
@@ -71,7 +71,7 @@ export default function AdminTriagePage() {
                 onClick={() => setStatusFilter(s)}
                 className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
                   statusFilter === s
-                    ? "bg-slate-800 text-gold-400 font-bold"
+                    ? "bg-blue-600 text-white font-bold shadow-sm"
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
@@ -118,7 +118,7 @@ export default function AdminTriagePage() {
                   <div className="flex items-center gap-2 text-xs">
                     <span className="font-semibold text-slate-200">{card.court_name}</span>
                     <span className="text-slate-600">•</span>
-                    <span className="text-gold-400 font-medium">{card.category}</span>
+                    <span className="text-blue-400 font-medium">{card.category}</span>
                     {card.citation && (
                       <>
                         <span className="text-slate-600">•</span>
@@ -135,9 +135,9 @@ export default function AdminTriagePage() {
                   <div className="flex items-center gap-2">
                     {/* Confidence Indicator */}
                     <div className="flex items-center gap-1.5 text-xs bg-admin-950 border border-slate-800 px-3 py-1 rounded-full">
-                      <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+                      <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                       <span className="text-slate-400">AI Confidence:</span>
-                      <span className={`font-mono font-bold ${card.confidence_score >= 0.95 ? "text-emerald-400" : "text-amber-400"}`}>
+                      <span className={`font-mono font-bold ${card.confidence_score >= 0.95 ? "text-emerald-400" : "text-sky-400"}`}>
                         {Math.round(card.confidence_score * 100)}%
                       </span>
                     </div>
@@ -152,8 +152,8 @@ export default function AdminTriagePage() {
 
                 {/* Flag Reason Notice */}
                 {card.flag_reason && (
-                  <div className="flex items-center gap-2 bg-amber-950/30 border border-amber-500/30 text-amber-300 text-xs p-2.5 rounded-xl">
-                    <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
+                  <div className="flex items-center gap-2 bg-red-950/30 border border-red-500/30 text-red-300 text-xs p-2.5 rounded-xl">
+                    <AlertTriangle className="w-4 h-4 shrink-0 text-red-400" />
                     <span><strong>Review Note:</strong> {card.flag_reason}</span>
                   </div>
                 )}
@@ -167,7 +167,7 @@ export default function AdminTriagePage() {
                     type="text"
                     value={card.headline}
                     onChange={(e) => handleTextChange(card.id, "headline", e.target.value)}
-                    className="w-full bg-admin-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm font-serif font-bold text-slate-100 focus:outline-none focus:border-gold-500"
+                    className="w-full bg-admin-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm font-serif font-bold text-slate-100 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -176,7 +176,7 @@ export default function AdminTriagePage() {
                   {/* Advocate Summary */}
                   <div className="bg-admin-950/60 border border-slate-800 rounded-xl p-4 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-gold-400 uppercase tracking-wide">
+                      <span className="text-xs font-bold text-blue-400 uppercase tracking-wide">
                         ⚖️ Advocate Summary (Legal Ratio)
                       </span>
                       <span className={`text-[11px] font-mono px-2 py-0.5 rounded ${
@@ -189,7 +189,7 @@ export default function AdminTriagePage() {
                       rows={5}
                       value={card.advocate_summary}
                       onChange={(e) => handleTextChange(card.id, "advocate_summary", e.target.value)}
-                      className="w-full bg-admin-950 border border-slate-700/60 rounded-lg p-3 text-xs leading-relaxed text-slate-200 focus:outline-none focus:border-gold-500 resize-none font-sans"
+                      className="w-full bg-admin-950 border border-slate-700/60 rounded-lg p-3 text-xs leading-relaxed text-slate-200 focus:outline-none focus:border-blue-500 resize-none font-sans"
                     />
                   </div>
 
@@ -249,7 +249,7 @@ export default function AdminTriagePage() {
                     <button
                       disabled={isProcessing}
                       onClick={() => handleAction(card.id, "APPROVE", true)}
-                      className="flex items-center gap-1.5 px-5 py-2 bg-gold-500 hover:bg-gold-400 text-slate-950 rounded-xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-gold-500/20"
+                      className="flex items-center gap-1.5 px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-blue-500/20"
                     >
                       <Bell className="w-4 h-4" />
                       <span>Approve & Push Alert 🚨</span>

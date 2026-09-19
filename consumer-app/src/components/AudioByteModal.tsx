@@ -139,7 +139,7 @@ export default function AudioByteModal({ card, mode, onClose }: AudioByteModalPr
         
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2 text-gold-600 dark:text-gold-400">
+          <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
             <Volume2 className={`w-5 h-5 ${isPlaying ? "animate-bounce" : ""}`} />
             <span className="text-xs font-mono font-bold uppercase tracking-wider">
               Legal Audio Docket (Web Audio)
@@ -167,7 +167,7 @@ export default function AudioByteModal({ card, mode, onClose }: AudioByteModalPr
         </div>
 
         {errorNotice && (
-          <div className="flex items-center gap-2 p-3 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200 text-xs">
+          <div className="flex items-center gap-2 p-3 mb-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 text-xs">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorNotice}</span>
           </div>
@@ -179,7 +179,7 @@ export default function AudioByteModal({ card, mode, onClose }: AudioByteModalPr
             <div
               key={idx}
               className={`w-1.5 rounded-full transition-all duration-200 ${
-                isPlaying ? "bg-gold-500 dark:bg-gold-400" : "bg-slate-300 dark:bg-slate-700"
+                isPlaying ? "bg-blue-600 dark:bg-blue-400" : "bg-slate-300 dark:bg-slate-700"
               }`}
               style={{
                 height: isPlaying ? `${Math.max(15, (baseHeight * (0.6 + Math.random() * 0.4)))}%` : "20%",
@@ -191,7 +191,7 @@ export default function AudioByteModal({ card, mode, onClose }: AudioByteModalPr
         {/* Progress Bar */}
         <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 mb-4 overflow-hidden">
           <div
-            className="bg-gold-500 dark:bg-gold-400 h-full rounded-full transition-all duration-200"
+            className="bg-blue-600 dark:bg-blue-400 h-full rounded-full transition-all duration-200"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -220,7 +220,7 @@ export default function AudioByteModal({ card, mode, onClose }: AudioByteModalPr
             <button
               type="button"
               onClick={togglePlayPause}
-              className="p-4 bg-gold-500 hover:bg-gold-400 text-slate-950 active:scale-95 rounded-2xl shadow-lg shadow-gold-500/25 transition-all"
+              className="p-4 bg-blue-600 hover:bg-blue-500 text-white active:scale-95 rounded-2xl shadow-lg shadow-blue-500/25 transition-all"
               aria-label={isPlaying ? "Pause audio reading" : "Play audio reading"}
             >
               {isPlaying ? (

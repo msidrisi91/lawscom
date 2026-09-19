@@ -104,3 +104,50 @@ def test_ai_agents_pipeline():
     assert result["holding"] == "Allowed"
     assert len(result["advocate_summary"].split()) <= 65
     assert len(result["citizen_summary"].split()) <= 52
+
+def test_admin_single_password_auth():
+    # Invalid password test
+    bad_res = client.post("/api/v1/admin/auth/verify", json={"password": "wrong_password_123"})
+    assert bad_res.status_code == 401
+
+    # Valid master password test
+    good_res = client.post("/api/v1/admin/auth/verify", json={"password": "JurisAdmin@2026"})
+    assert good_res.status_code == 200
+    data = good_res.json()
+    assert data["success"] is True
+    assert "token" in data
+
+def test_push_broadcast_and_latest_polling():
+    # Broadcast a breaking news item
+    broadcast_payload = {
+        "title": "SC Landmark Verdict on Electoral Bonds",
+        "body": "Constitution bench strikes down scheme violating right to information.",
+        "target_role": "all",
+        "is_breaking": True
+    }
+    b_res = client.post(
+        "/api/v1/admin/broadcast",
+        json=broadcast_payload,
+        headers={"X-Admin-Key": "juris_admin_secret_key_2026"}
+    )
+    assert b_res.status_code == 200
+    b_data = b_res.json()
+    assert b_data["status"] == "success"
+
+    # Query latest endpoint for consumer polling
+    latest_res = client.get("/api/v1/push/latest")
+    assert latest_res.status_code == 200
+    latest_data = latest_res.json()
+    assert latest_data["latest"] is not None
+    assert "SC Landmark Verdict" in latest_data["latest"]["title"]
+
+    # Check paginated broadcast history
+    hist_res = client.get(
+        "/api/v1/admin/broadcast/history?limit=10&offset=0",
+        headers={"X-Admin-Key": "juris_admin_secret_key_2026"}
+    )
+    assert hist_res.status_code == 200
+    hist_data = hist_res.json()
+    assert isinstance(hist_data, list)
+    assert len(hist_data) > 0
+

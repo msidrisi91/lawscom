@@ -53,8 +53,8 @@ export default function LegalCard({
       <div>
         <div className="flex items-center justify-between gap-2 mb-3.5">
           {/* Court Badge */}
-          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-850 border border-slate-200 dark:border-slate-700/60 rounded-full px-3 py-1 text-xs text-slate-700 dark:text-slate-300">
-            <Scale className="w-3.5 h-3.5 text-gold-600 dark:text-gold-400 shrink-0" />
+          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/60 rounded-full px-3 py-1 text-xs text-slate-700 dark:text-slate-300">
+            <Scale className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
             <span className="font-semibold truncate max-w-[170px]">{card.court_name}</span>
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
           </div>
@@ -74,7 +74,7 @@ export default function LegalCard({
               Breaking
             </span>
           )}
-          <span className="text-[11px] font-bold text-gold-600 dark:text-gold-400 tracking-wider uppercase">
+          <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 tracking-wider uppercase">
             {card.category}
           </span>
           {card.citation && (
@@ -97,14 +97,14 @@ export default function LegalCard({
                 {card.advocate_summary}
               </p>
             ) : (
-              <p className="animate-fadeIn text-slate-800 dark:text-sky-100/95 font-normal">
+              <p className="animate-fadeIn text-slate-800 dark:text-blue-50/95 font-normal">
                 {card.citizen_summary}
               </p>
             )}
           </div>
 
           {/* Subtle Mode Lens Indicator */}
-          <div className="mt-3.5 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-850 pt-2 font-medium">
+          <div className="mt-3.5 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 font-medium">
             <span>
               {mode === "advocate" ? "⚖️ Advocate Legal Ratio" : "💡 Citizen Practical Takeaway"}
             </span>
@@ -123,7 +123,7 @@ export default function LegalCard({
         {card.related_sections && card.related_sections.length > 0 && (
           <div className="mb-4">
             <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1.5 flex items-center gap-1">
-              <BookOpen className="w-3 h-3 text-gold-600 dark:text-gold-400" />
+              <BookOpen className="w-3 h-3 text-blue-600 dark:text-blue-400" />
               <span>Cited Bare Acts (Tap to read full section):</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -131,11 +131,11 @@ export default function LegalCard({
                 <button
                   key={idx}
                   onClick={() => onSectionClick(sec.act, sec.section)}
-                  className="inline-flex items-center gap-1 bg-amber-50 dark:bg-slate-850 hover:bg-amber-100 dark:hover:bg-slate-800 active:scale-95 border border-gold-300/60 dark:border-slate-700 text-gold-700 dark:text-gold-300 text-xs font-mono font-medium px-2.5 py-1 rounded-lg transition-all shadow-sm"
+                  className="inline-flex items-center gap-1 bg-blue-50 dark:bg-slate-850 hover:bg-blue-100 dark:hover:bg-slate-800 active:scale-95 border border-blue-200 dark:border-slate-700 text-blue-700 dark:text-blue-300 text-xs font-mono font-medium px-2.5 py-1 rounded-lg transition-all shadow-sm"
                   aria-label={`View Bare Act section ${sec.section} of ${sec.act}`}
                 >
                   <span>{sec.act} § {sec.section}</span>
-                  <ArrowUpRight className="w-3 h-3 text-gold-500" />
+                  <ArrowUpRight className="w-3 h-3 text-blue-500" />
                 </button>
               ))}
             </div>
@@ -151,7 +151,7 @@ export default function LegalCard({
             className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-850 dark:hover:bg-slate-800 active:scale-95 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold px-3.5 py-2 rounded-full transition-all shadow-sm"
             aria-label="Listen to audio briefing"
           >
-            <Volume2 className="w-3.5 h-3.5 text-gold-600 dark:text-gold-400" />
+            <Volume2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span>Listen Audio</span>
           </button>
 
@@ -171,7 +171,7 @@ export default function LegalCard({
           {/* Save / Bookmark */}
           <button
             onClick={() => onToggleSave && onToggleSave(card.id)}
-            className={`p-2 transition-colors active:scale-90 ${isSaved ? "text-gold-500 fill-current" : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"}`}
+            className={`p-2 transition-colors active:scale-90 ${isSaved ? "text-blue-600 dark:text-blue-400 fill-current" : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"}`}
             aria-label="Save to briefcase"
           >
             <Bookmark className="w-4 h-4" fill={isSaved ? "currentColor" : "none"} />
@@ -180,7 +180,7 @@ export default function LegalCard({
           {/* Share */}
           <button
             onClick={handleShare}
-            className="flex items-center gap-1.5 bg-gold-500/15 hover:bg-gold-500/25 active:scale-95 text-gold-700 dark:text-gold-400 border border-gold-500/30 text-xs font-bold px-3.5 py-2 rounded-full transition-all"
+            className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/50 active:scale-95 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 text-xs font-bold px-3.5 py-2 rounded-full transition-all"
             aria-label="Share legal card"
           >
             <Share2 className="w-3.5 h-3.5" />

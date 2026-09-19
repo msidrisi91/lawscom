@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AdminHeader from "@/components/AdminHeader";
+import AdminAuthGuard from "@/components/AdminAuthGuard";
 
 export const metadata: Metadata = {
   title: "JurisShorts - Admin Command Center",
@@ -15,10 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="bg-admin-950 text-slate-100 min-h-screen flex flex-col">
-        <AdminHeader />
-        <main className="flex-1 w-full max-w-7xl mx-auto p-6">
-          {children}
-        </main>
+        <AdminAuthGuard>
+          <AdminHeader />
+          <main className="flex-1 w-full max-w-7xl mx-auto p-6">
+            {children}
+          </main>
+        </AdminAuthGuard>
       </body>
     </html>
   );

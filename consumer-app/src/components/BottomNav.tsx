@@ -29,8 +29,9 @@ export default function BottomNav() {
             href={tab.href}
             className={`min-w-[56px] min-h-[44px] flex flex-col items-center justify-center rounded-xl transition-all duration-150 active:scale-90 ${
               isActive 
-                ? "text-gold-600 dark:text-gold-400 font-bold" 
+                ? "text-blue-600 dark:text-blue-400 font-bold" 
                 : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+
             }`}
             aria-label={tab.label}
           >

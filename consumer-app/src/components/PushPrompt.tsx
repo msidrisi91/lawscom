@@ -46,9 +46,9 @@ export default function PushPrompt() {
 
   return (
     <div className="fixed top-3 inset-x-3 max-w-md mx-auto z-40 animate-slideDown">
-      <div className="bg-judicial-800/95 border border-gold-500/40 rounded-2xl p-3.5 shadow-2xl backdrop-blur-md flex items-center justify-between gap-3">
+      <div className="bg-slate-900/95 border border-blue-500/40 rounded-2xl p-3.5 shadow-2xl backdrop-blur-md flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 shrink-0">
+          <div className="p-2 bg-blue-500/10 border border-blue-500/30 rounded-xl text-blue-400 shrink-0">
             <Bell className="w-4 h-4 animate-bounce" />
           </div>
           <div>
@@ -61,7 +61,7 @@ export default function PushPrompt() {
           <button
             onClick={handleEnable}
             disabled={subscribed}
-            className="bg-gold-500 hover:bg-gold-400 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg active:scale-95 transition-all flex items-center gap-1"
+            className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg active:scale-95 transition-all flex items-center gap-1 shadow-sm"
           >
             {subscribed ? (
               <>

@@ -52,7 +52,7 @@ export default function ExplorePage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search by keyword, judge, citation (e.g. 2026 INSC)..."
-          className="w-full bg-slate-50 dark:bg-judicial-900 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-gold-500 transition-colors"
+          className="w-full bg-slate-50 dark:bg-judicial-900 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors"
         />
       </div>
 
@@ -64,7 +64,7 @@ export default function ExplorePage() {
             onClick={() => setSelectedCourt(court)}
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
               selectedCourt === court
-                ? "bg-gold-500 text-slate-950 shadow-sm"
+                ? "bg-blue-600 text-white shadow-sm"
                 : "bg-slate-100 dark:bg-slate-850 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800"
             }`}
           >
@@ -81,7 +81,7 @@ export default function ExplorePage() {
             onClick={() => setSelectedCategory(cat)}
             className={`px-3 py-1 rounded-xl text-[11px] font-semibold whitespace-nowrap transition-all ${
               selectedCategory === cat
-                ? "bg-sky-100 dark:bg-sky-500/20 text-sky-800 dark:text-sky-300 border border-sky-300 dark:border-sky-500/40"
+                ? "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 font-bold"
                 : "bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:text-slate-700 border border-slate-200 dark:border-slate-850"
             }`}
           >
@@ -103,11 +103,11 @@ export default function ExplorePage() {
               href={`/#card-${card.id}`}
               className="block bg-slate-50 dark:bg-judicial-900 hover:bg-slate-100 dark:hover:bg-judicial-850 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all group"
             >
-              <div className="flex items-center justify-between text-[11px] text-gold-600 dark:text-gold-400 mb-1">
+              <div className="flex items-center justify-between text-[11px] text-blue-600 dark:text-blue-400 mb-1">
                 <span className="font-semibold">{card.court_name}</span>
                 {card.citation && <span className="font-mono text-slate-500">{card.citation}</span>}
               </div>
-              <h3 className="text-sm font-serif font-bold text-slate-900 dark:text-slate-100 group-hover:text-gold-600 dark:group-hover:text-gold-400 transition-colors line-clamp-2 mb-1.5">
+              <h3 className="text-sm font-serif font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 mb-1.5">
                 {card.headline}
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">

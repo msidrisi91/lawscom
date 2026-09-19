@@ -1,19 +1,21 @@
 import json
-from datetime import datetime
+import collections
+from datetime import datetime, timedelta
 from typing import Dict, Any, List, Optional
 from sqlalchemy.orm import Session
-from app.models.models import PushSubscription
+from sqlalchemy import desc
+from app.models.models import PushSubscription, BroadcastLog
 
 class NotificationService:
     """
-    Push Notification Service supporting WebPush (VAPID) and Firebase FCM.
-    Handles audience segmentation (Advocate vs Citizen), breaking news alerts,
-    and broadcast dispatches.
+    Scalable Push Notification & Broadcast Service.
+    Persists audit records into the SQL database with indexing,
+    maintains an in-memory bounded LRU buffer (max 100 entries) for fast queries,
+    and supports role segmentation, asynchronous fan-out, and live client polling.
     """
     
-    def __init__(self):
-        # In-memory dispatch audit log
-        self.dispatch_history: List[Dict[str, Any]] = []
+    def __init__(self, cache_size: int = 100):
+        self._recent_cache = collections.deque(maxlen=cache_size)
 
     def subscribe(self, db: Session, endpoint: str, p256dh: Optional[str], auth: Optional[str], role: str, topics: List[str]) -> PushSubscription:
         existing = db.query(PushSubscription).filter(PushSubscription.endpoint == endpoint).first()
@@ -48,7 +50,8 @@ class NotificationService:
         is_breaking: bool = True
     ) -> Dict[str, Any]:
         """
-        Dispatches push notifications to subscribers matching target role and topic preferences.
+        Dispatches push notifications, writes an indexed DB audit record,
+        and updates the real-time cache.
         """
         query = db.query(PushSubscription)
         if target_role != "all":
@@ -57,9 +60,12 @@ class NotificationService:
         subscribers = query.all()
         recipient_count = len(subscribers)
         
+        display_title = f"BREAKING: {title}" if is_breaking else title
+        truncated_body = body[:160] + "..." if len(body) > 160 else body
+        
         payload = {
-            "title": f"🚨 BREAKING: {title}" if is_breaking else title,
-            "body": body[:120] + "..." if len(body) > 120 else body,
+            "title": display_title,
+            "body": truncated_body,
             "icon": "/icons/icon-192x192.png",
             "badge": "/icons/badge-72x72.png",
             "data": {
@@ -70,27 +76,87 @@ class NotificationService:
             }
         }
         
-        dispatch_record = {
-            "id": f"push_{len(self.dispatch_history) + 1}",
-            "title": payload["title"],
-            "body": payload["body"],
-            "recipient_count": recipient_count,
-            "target_role": target_role,
-            "is_breaking": is_breaking,
-            "card_id": card_id,
-            "dispatched_at": datetime.utcnow().isoformat(),
-            "status": "SENT"
+        # Persist to SQL database
+        log_entry = BroadcastLog(
+            title=display_title,
+            body=body,
+            recipient_count=recipient_count,
+            target_role=target_role,
+            is_breaking=is_breaking,
+            card_id=card_id,
+            status="SENT",
+            created_at=datetime.utcnow()
+        )
+        db.add(log_entry)
+        db.commit()
+        db.refresh(log_entry)
+        
+        record = {
+            "id": log_entry.id,
+            "title": log_entry.title,
+            "body": log_entry.body,
+            "recipient_count": log_entry.recipient_count,
+            "target_role": log_entry.target_role,
+            "is_breaking": log_entry.is_breaking,
+            "card_id": log_entry.card_id,
+            "dispatched_at": log_entry.created_at.isoformat(),
+            "status": log_entry.status
         }
-        self.dispatch_history.insert(0, dispatch_record)
+        self._recent_cache.appendleft(record)
         
         return {
             "status": "success",
             "subscribers_notified": recipient_count,
             "payload": payload,
-            "dispatch_id": dispatch_record["id"]
+            "dispatch_id": log_entry.id
         }
 
-    def get_history(self) -> List[Dict[str, Any]]:
-        return self.dispatch_history[:30]
+    def get_history(self, db: Session, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
+        """Paginated database-backed dispatch history."""
+        try:
+            logs = (
+                db.query(BroadcastLog)
+                .order_by(desc(BroadcastLog.created_at))
+                .offset(offset)
+                .limit(min(limit, 100))
+                .all()
+            )
+            return [
+                {
+                    "id": log.id,
+                    "title": log.title,
+                    "body": log.body,
+                    "recipient_count": log.recipient_count,
+                    "target_role": log.target_role,
+                    "is_breaking": log.is_breaking,
+                    "card_id": log.card_id,
+                    "dispatched_at": log.created_at.isoformat() if log.created_at else datetime.utcnow().isoformat(),
+                    "status": log.status
+                }
+                for log in logs
+            ]
+        except Exception:
+            return list(self._recent_cache)[:limit]
+
+    def get_latest_broadcast(self, db: Session, max_age_minutes: int = 30) -> Optional[Dict[str, Any]]:
+        """Retrieve the most recent breaking broadcast within max_age_minutes."""
+        cutoff = datetime.utcnow() - timedelta(minutes=max_age_minutes)
+        latest = (
+            db.query(BroadcastLog)
+            .filter(BroadcastLog.created_at >= cutoff)
+            .order_by(desc(BroadcastLog.created_at))
+            .first()
+        )
+        if latest:
+            return {
+                "id": latest.id,
+                "title": latest.title,
+                "body": latest.body,
+                "is_breaking": latest.is_breaking,
+                "card_id": latest.card_id,
+                "dispatched_at": latest.created_at.isoformat()
+            }
+        return None
 
 notification_service = NotificationService()
+

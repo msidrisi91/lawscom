@@ -27,3 +27,13 @@ def subscribe_to_push(payload: PushSubscribeRequest, db: Session = Depends(get_d
         topics=payload.topics
     )
     return {"status": "subscribed", "id": sub.id, "role": sub.user_role}
+ 
+@router.get("/latest")
+def get_latest_push(max_age_minutes: int = 30, db: Session = Depends(get_db)):
+    """
+    Returns the most recent breaking push broadcast within max_age_minutes.
+    Allows consumer app tabs to poll for breaking alerts in real-time.
+    """
+    latest = notification_service.get_latest_broadcast(db=db, max_age_minutes=max_age_minutes)
+    return {"latest": latest}
+

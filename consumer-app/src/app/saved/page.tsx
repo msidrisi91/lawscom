@@ -43,7 +43,7 @@ export default function SavedPage() {
       {/* Title Bar */}
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
-          <Bookmark className="w-5 h-5 text-gold-500 fill-current" />
+          <Bookmark className="w-5 h-5 text-blue-600 dark:text-blue-400 fill-current" />
           <h1 className="font-serif text-2xl font-extrabold text-slate-900 dark:text-slate-100">
             Courtroom Briefcase
           </h1>
@@ -65,7 +65,7 @@ export default function SavedPage() {
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 bg-gold-500 hover:bg-gold-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs shadow-md shadow-gold-500/20 active:scale-95"
+              className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md shadow-blue-500/20 active:scale-95"
             >
               <span>Explore Latest Briefs</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -77,7 +77,7 @@ export default function SavedPage() {
               key={card.id}
               className="bg-slate-50 dark:bg-judicial-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 relative"
             >
-              <div className="flex items-center justify-between text-[11px] text-gold-600 dark:text-gold-400 mb-1">
+              <div className="flex items-center justify-between text-[11px] text-blue-600 dark:text-blue-400 mb-1">
                 <span className="font-semibold">{card.court_name}</span>
                 {card.citation && <span className="font-mono text-slate-500">{card.citation}</span>}
               </div>
@@ -93,7 +93,7 @@ export default function SavedPage() {
               <div className="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-2 text-xs">
                 <button
                   onClick={() => handleCopyCitation(card)}
-                  className="flex items-center gap-1 text-gold-600 dark:text-gold-400 hover:underline text-[11px] font-bold"
+                  className="flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline text-[11px] font-bold"
                 >
                   {copiedId === card.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedId === card.id ? "Copied" : "Copy Citation"}</span>

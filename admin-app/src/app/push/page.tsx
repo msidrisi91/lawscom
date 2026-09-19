@@ -33,6 +33,38 @@ export default function PushCenterPage() {
     try {
       const res = await broadcastPush(title, body, undefined, targetRole, isBreaking);
       setSuccessNotice(`Successfully broadcasted to ${res.subscribers_notified} active subscribers!`);
+
+      // 1. Instant 0ms Cross-Tab delivery to all open consumer tabs via BroadcastChannel
+      if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+        try {
+          const bc = new BroadcastChannel("juris_broadcast");
+          bc.postMessage({
+            type: "NEW_BROADCAST",
+            payload: {
+              id: res.dispatch_id || "broadcast_" + Date.now(),
+              title: isBreaking ? `🚨 BREAKING: ${title}` : title,
+              body: body,
+              is_breaking: isBreaking,
+              dispatched_at: new Date().toISOString()
+            }
+          });
+          bc.close();
+        } catch (bcErr) {
+          console.warn("BroadcastChannel error:", bcErr);
+        }
+      }
+
+      // 2. Cross-tab storage event trigger fallback
+      try {
+        localStorage.setItem("juris_cross_tab_push", JSON.stringify({
+          id: res.dispatch_id || "broadcast_" + Date.now(),
+          title: isBreaking ? `🚨 BREAKING: ${title}` : title,
+          body: body,
+          is_breaking: isBreaking,
+          dispatched_at: new Date().toISOString()
+        }));
+      } catch {}
+
       loadHistory();
       setTimeout(() => setSuccessNotice(null), 4000);
     } catch (err: any) {
@@ -50,7 +82,7 @@ export default function PushCenterPage() {
       {/* Title */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <Bell className="w-5 h-5 text-gold-400" />
+          <Bell className="w-5 h-5 text-blue-400" />
           <h1 className="text-xl font-bold text-slate-100">
             Push Notification Broadcast Console
           </h1>
@@ -82,7 +114,7 @@ export default function PushCenterPage() {
                 type="checkbox"
                 checked={isBreaking}
                 onChange={(e) => setIsBreaking(e.target.checked)}
-                className="w-4 h-4 rounded text-gold-500 focus:ring-gold-400"
+                className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
               />
               <span className={`text-xs font-bold ${isBreaking ? "text-red-400" : "text-slate-500"}`}>
                 {isBreaking ? "🚨 HIGH PRIORITY" : "NORMAL"}
@@ -100,7 +132,7 @@ export default function PushCenterPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. 7-Judge SC Bench Delivers Ruling On Arbitration"
-              className="w-full bg-admin-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-medium focus:outline-none focus:border-gold-500"
+              className="w-full bg-admin-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-medium focus:outline-none focus:border-blue-500"
               required
             />
           </div>
@@ -111,7 +143,7 @@ export default function PushCenterPage() {
               <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
                 Summary Snippet (Body)
               </label>
-              <span className={`text-[11px] font-mono ${wordCount <= 35 ? "text-slate-400" : "text-amber-400"}`}>
+              <span className={`text-[11px] font-mono ${wordCount <= 35 ? "text-slate-400" : "text-blue-400"}`}>
                 {wordCount} words (Recommended: &lt; 35 for lockscreen)
               </span>
             </div>
@@ -120,7 +152,7 @@ export default function PushCenterPage() {
               value={body}
               onChange={(e) => setBody(e.target.value)}
               placeholder="Enter brief 1-2 sentence core message..."
-              className="w-full bg-admin-950 border border-slate-700/80 rounded-xl p-3 text-xs leading-relaxed text-slate-200 focus:outline-none focus:border-gold-500 resize-none font-sans"
+              className="w-full bg-admin-950 border border-slate-700/80 rounded-xl p-3 text-xs leading-relaxed text-slate-200 focus:outline-none focus:border-blue-500 resize-none font-sans"
               required
             />
           </div>
@@ -142,7 +174,7 @@ export default function PushCenterPage() {
                   onClick={() => setTargetRole(role.id)}
                   className={`p-3 rounded-xl border text-left transition-all ${
                     targetRole === role.id
-                      ? "bg-gold-500/10 border-gold-500/60 text-gold-300"
+                      ? "bg-blue-600/10 border-blue-500/60 text-blue-300"
                       : "bg-admin-950 border-slate-800 text-slate-400 hover:text-slate-200"
                   }`}
                 >
@@ -158,7 +190,7 @@ export default function PushCenterPage() {
             <button
               type="submit"
               disabled={broadcasting}
-              className="flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-slate-950 px-6 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-gold-500/20"
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-blue-500/20"
             >
               <Send className="w-4 h-4" />
               <span>{broadcasting ? "Broadcasting..." : "Broadcast Push Notification Now"}</span>
@@ -170,7 +202,7 @@ export default function PushCenterPage() {
         <div className="bg-admin-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-1.5 text-xs font-bold text-slate-300 mb-4 uppercase tracking-wider">
-              <Smartphone className="w-4 h-4 text-gold-400" />
+              <Smartphone className="w-4 h-4 text-blue-400" />
               <span>Live Lock-Screen Preview</span>
             </div>
 
@@ -178,7 +210,7 @@ export default function PushCenterPage() {
             <div className="w-full bg-slate-900/90 border border-slate-700/80 rounded-2xl p-3.5 shadow-2xl backdrop-blur-xl">
               <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-4 h-4 rounded bg-gold-500 text-slate-950 flex items-center justify-center font-bold text-[9px]">
+                  <div className="w-4 h-4 rounded bg-blue-600 text-white flex items-center justify-center font-bold text-[9px]">
                     JS
                   </div>
                   <span className="font-semibold text-slate-200">JurisShorts</span>
@@ -199,7 +231,7 @@ export default function PushCenterPage() {
                 {body}
               </p>
 
-              <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-gold-400 font-medium">
+              <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-blue-400 font-medium">
                 <span>Tap to read 60-sec brief</span>
                 <span>🔊 30s Audio</span>
               </div>
@@ -216,7 +248,7 @@ export default function PushCenterPage() {
       {/* Broadcast History Table */}
       <div className="bg-admin-900 border border-slate-800 rounded-2xl p-5">
         <div className="flex items-center gap-2 mb-4">
-          <History className="w-4 h-4 text-gold-400" />
+          <History className="w-4 h-4 text-blue-400" />
           <h3 className="text-sm font-bold text-slate-200">Recent Push Dispatches Audit Log</h3>
         </div>
 

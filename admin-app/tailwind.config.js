@@ -9,18 +9,25 @@ module.exports = {
     extend: {
       colors: {
         admin: {
-          950: "#090D16",
-          900: "#0F172A",
-          800: "#1E293B",
-          700: "#334155",
-          600: "#475569",
+          950: "#030712",
+          900: "#0B1220",
+          800: "#0F172A",
+          700: "#1E293B",
+          600: "#334155",
         },
-        gold: {
-          400: "#FBBF24",
-          500: "#D4AF37",
-          600: "#B45309",
+        cobalt: {
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+        },
+        azure: {
+          400: "#38BDF8",
+          500: "#0EA5E9",
+          600: "#0284C7",
         }
       },
+
       fontFamily: {
         serif: ["Georgia", "Cambria", "serif"],
         sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],

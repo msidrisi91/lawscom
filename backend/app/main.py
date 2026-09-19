@@ -15,6 +15,7 @@ from app.api.v1.admin.triage import router as admin_triage_router
 from app.api.v1.admin.broadcast import router as admin_broadcast_router
 from app.api.v1.admin.engine import router as admin_engine_router
 from app.api.v1.admin.manual import router as admin_manual_router
+from app.api.v1.admin.auth import router as admin_auth_router
 
 # Initialize tables
 Base.metadata.create_all(bind=engine)
@@ -45,10 +46,12 @@ app.include_router(daily_law_router, prefix=settings.API_V1_STR)
 app.include_router(push_router, prefix=settings.API_V1_STR)
 
 # Mount Protected Decoupled Admin Routers
+app.include_router(admin_auth_router, prefix=settings.API_V1_STR)
 app.include_router(admin_triage_router, prefix=settings.API_V1_STR)
 app.include_router(admin_broadcast_router, prefix=settings.API_V1_STR)
 app.include_router(admin_engine_router, prefix=settings.API_V1_STR)
 app.include_router(admin_manual_router, prefix=settings.API_V1_STR)
+
 
 @app.get("/api/health")
 def health_check():

@@ -47,7 +47,7 @@ export default function PersonaOnboardingModal({
         
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-gold-500/10 border border-gold-500/30 text-gold-600 dark:text-gold-400 mx-auto flex items-center justify-center mb-3">
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 mx-auto flex items-center justify-center mb-3">
             <Scale className="w-6 h-6" />
           </div>
           <h2 className="font-serif text-xl font-bold tracking-tight mb-1">
@@ -67,12 +67,12 @@ export default function PersonaOnboardingModal({
             onClick={() => setSelected("advocate")}
             className={`w-full text-left p-4 rounded-2xl border transition-all relative flex items-start gap-3.5 ${
               selected === "advocate"
-                ? "bg-amber-50 dark:bg-gold-500/10 border-gold-500 text-slate-950 dark:text-slate-100 ring-2 ring-gold-500/30 shadow-md"
+                ? "bg-blue-50 dark:bg-blue-950/40 border-blue-500 text-slate-950 dark:text-slate-100 ring-2 ring-blue-500/30 shadow-md"
                 : "bg-slate-50 dark:bg-judicial-800/60 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700"
             }`}
           >
             <div className={`p-2 rounded-xl shrink-0 ${
-              selected === "advocate" ? "bg-gold-500 text-slate-950" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
+              selected === "advocate" ? "bg-blue-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
             }`}>
               <Scale className="w-5 h-5" />
             </div>
@@ -80,7 +80,7 @@ export default function PersonaOnboardingModal({
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-0.5">
                 <span className="font-bold text-sm text-slate-900 dark:text-slate-100">Advocate & Student</span>
-                {selected === "advocate" && <CheckCircle className="w-4 h-4 text-gold-500 fill-current" />}
+                {selected === "advocate" && <CheckCircle className="w-4 h-4 text-blue-600 dark:text-blue-400 fill-current" />}
               </div>
               <p className="text-[11.5px] text-slate-500 dark:text-slate-400 leading-snug">
                 Ratio Decidendi, Coram Bench, statutory sections, and formal court citations.
@@ -94,12 +94,12 @@ export default function PersonaOnboardingModal({
             onClick={() => setSelected("citizen")}
             className={`w-full text-left p-4 rounded-2xl border transition-all relative flex items-start gap-3.5 ${
               selected === "citizen"
-                ? "bg-sky-50 dark:bg-sky-500/10 border-sky-500 text-slate-950 dark:text-slate-100 ring-2 ring-sky-500/30 shadow-md"
+                ? "bg-sky-50 dark:bg-sky-950/40 border-sky-500 text-slate-950 dark:text-slate-100 ring-2 ring-sky-500/30 shadow-md"
                 : "bg-slate-50 dark:bg-judicial-800/60 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700"
             }`}
           >
             <div className={`p-2 rounded-xl shrink-0 ${
-              selected === "citizen" ? "bg-sky-500 text-slate-950" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
+              selected === "citizen" ? "bg-sky-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
             }`}>
               <Users className="w-5 h-5" />
             </div>
@@ -120,7 +120,7 @@ export default function PersonaOnboardingModal({
         {/* Action Button */}
         <button
           onClick={handleConfirm}
-          className="w-full bg-gradient-to-r from-gold-500 to-amber-600 hover:from-gold-400 hover:to-amber-500 text-slate-950 font-bold py-3.5 rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20 active:scale-98 transition-all"
+          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 active:scale-98 transition-all"
         >
           <span>Continue Reading</span>
           <ArrowRight className="w-4 h-4" />

@@ -8,69 +8,70 @@ interface LogoProps {
   showText?: boolean;
 }
 
-export default function Logo({ className = "", size = 28, showText = true }: LogoProps) {
+export default function Logo({ className = "", size = 32, showText = true }: LogoProps) {
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
-      {/* Modern Minimalist Vector Mark */}
+      {/* Precision Geometric Judicial Insignia */}
       <div 
-        className="relative flex items-center justify-center rounded-xl bg-gradient-to-br from-gold-400 via-gold-500 to-amber-700 p-1 shadow-md shadow-gold-500/20 shrink-0"
+        className="relative flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 p-1.5 shadow-lg shadow-blue-500/20 shrink-0 ring-1 ring-white/20"
         style={{ width: size, height: size }}
       >
         <svg
           viewBox="0 0 32 32"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full text-slate-950"
+          className="w-full h-full text-white"
         >
-          {/* Central Pillar of Law */}
+          {/* Central Apex & Pillar */}
           <path
             d="M16 4V28"
             stroke="currentColor"
-            strokeWidth="2.5"
+            strokeWidth="2.4"
             strokeLinecap="round"
           />
-          {/* Dynamic Balanced Scales / Fast-forward Chevrons */}
+          {/* Crossbeam of Balance */}
           <path
-            d="M6 10L16 6L26 10"
+            d="M5 10L16 6L27 10"
             stroke="currentColor"
             strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {/* Left Pan (Precedent) */}
+          {/* Left Equity Basin */}
           <path
-            d="M6 10V18C6 20.2 7.8 22 10 22C12.2 22 14 20.2 14 18V10"
+            d="M5 10L8 18C8.5 20 10.5 21 12 21C13.5 21 15.5 20 16 18L16 10"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {/* Right Pan (Justice & Speed) */}
+          {/* Right Velocity Basin */}
           <path
-            d="M18 10V16C18 18.2 19.8 20 22 20C24.2 20 26 18.2 26 16V10"
+            d="M16 10L16 18C16.5 20 18.5 21 20 21C21.5 21 23.5 20 24 18L27 10"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {/* Base Pedestal */}
+          {/* Precision Foundation */}
           <path
-            d="M11 28H21"
+            d="M10 28H22"
             stroke="currentColor"
-            strokeWidth="2.5"
+            strokeWidth="2.4"
             strokeLinecap="round"
           />
+          <circle cx="16" cy="6" r="2" fill="currentColor" />
         </svg>
       </div>
 
       {showText && (
-        <div className="flex flex-col leading-none">
-          <div className="flex items-center gap-1">
-            <span className="font-serif font-black tracking-tight text-slate-900 dark:text-slate-100 text-lg">
-              Juris<span className="text-gold-500 dark:text-gold-400">Shorts</span>
+        <div className="flex flex-col leading-tight">
+          <div className="flex items-center tracking-tight">
+            <span className="font-sans font-black text-slate-950 dark:text-white text-lg tracking-tight">
+              JURIS<span className="text-blue-600 dark:text-blue-400">SHORTS</span>
             </span>
           </div>
-          <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 mt-0.5 font-semibold">
+          <span className="text-[8.5px] font-sans font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
             60s Legal Intelligence
           </span>
         </div>
